@@ -42,6 +42,9 @@ class SignUpView(APIView):
             if '@' not in email or '.' not in email.split('@')[-1]:
                 return Response({'error': 'Invalid email format.'}, status=status.HTTP_400_BAD_REQUEST)
 
+            if not validate_phone_number_with_national_code(phone_number, national_code):
+                return Response({'error': 'Phone number does not match with national code.'}, status=status.HTTP_400_BAD_REQUEST)
+
             user = serializer.save()
             user.is_active = False
             # Send verification email
@@ -85,6 +88,9 @@ def validate_phone_number(phone_number):
     if phone_number.startswith("09") and len(phone_number) == 11 and phone_number.isdigit():
         return True
     return False
+
+def validate_phone_number_with_national_code(phone_number, nationalcode):
+    return True
 
 class VerifyEmailView(APIView):
     permission_classes = [AllowAny]
