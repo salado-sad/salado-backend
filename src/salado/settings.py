@@ -26,7 +26,7 @@ SECRET_KEY = 'django-insecure-x-z+839%t$$ok))i4l71@#dhpfgp!=w$weg_s*@i&lz_+&$rgl
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['api.salado.mghgm.ir', 'localhost']
+ALLOWED_HOSTS = ['api.salado.mghgm.ir', 'localhost', '127.0.0.1']
 
 
 # Application definition
@@ -40,6 +40,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     
     'rest_framework',
+    'rest_framework_simplejwt',
     'corsheaders',
 
     'auth_system',
@@ -55,6 +56,7 @@ MIDDLEWARE = [
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
+
 
 ROOT_URLCONF = 'salado.urls'
 
@@ -138,7 +140,27 @@ EMAIL_HOST_USER = None           # No authentication needed for local setup
 EMAIL_HOST_PASSWORD = None       # No password
 DEFAULT_FROM_EMAIL = 'auth@saldo.ir'
 
+
+CORS_ALLOW_ALL_ORIGINS = True  # TODO: Remove this
+
 CORS_ALLOWED_ORIGINS = [
     "http://localhost:3000",  # React development server
     "https://your-production-site.com",  # Production site
 ]
+
+AUTH_USER_MODEL = 'auth_system.SaladoUser'
+
+REST_FRAMEWORK = {
+    'DEFAULT_AUTHENTICATION_CLASSES': (
+        'rest_framework_simplejwt.authentication.JWTAuthentication',
+    ),
+}
+
+from datetime import timedelta
+
+SIMPLE_JWT = {
+    'ACCESS_TOKEN_LIFETIME': timedelta(days=1),
+    'REFRESH_TOKEN_LIFETIME': timedelta(days=7),
+    'ROTATE_REFRESH_TOKENS': True,
+    'BLACKLIST_AFTER_ROTATION': True,
+}
