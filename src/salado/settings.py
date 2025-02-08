@@ -42,8 +42,9 @@ INSTALLED_APPS = [
     'rest_framework',
     'rest_framework_simplejwt',
     'corsheaders',
-
     'auth_system',
+    'vendors',
+    'management',
 ]
 
 MIDDLEWARE = [
