@@ -26,7 +26,7 @@ SECRET_KEY = 'django-insecure-x-z+839%t$$ok))i4l71@#dhpfgp!=w$weg_s*@i&lz_+&$rgl
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['api.salado.mghgm.ir', 'localhost']
+ALLOWED_HOSTS = ['api.salado.mghgm.ir', 'localhost', '127.0.0.1']
 
 
 # Application definition
@@ -41,8 +41,9 @@ INSTALLED_APPS = [
     
     'rest_framework',
     'corsheaders',
-
     'auth_system',
+    'vendors',
+    'management',
 ]
 
 MIDDLEWARE = [
