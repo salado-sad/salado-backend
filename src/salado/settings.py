@@ -165,11 +165,3 @@ SIMPLE_JWT = {
     'ROTATE_REFRESH_TOKENS': True,
     'BLACKLIST_AFTER_ROTATION': True,
 }
-#
-#
-# from django.contrib.auth.models import Group
-#
-# GROUPS = ['vendor', 'customer', 'saladoadmin', 'delivery']
-#
-# for group_name in GROUPS:
-#     Group.objects.get_or_create(name=group_name)
