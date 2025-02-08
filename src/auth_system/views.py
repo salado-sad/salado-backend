@@ -2,14 +2,15 @@ from rest_framework.generics import CreateAPIView
 from rest_framework.permissions import AllowAny
 from rest_framework_simplejwt.views import TokenObtainPairView
 from rest_framework.exceptions import ValidationError
-from .models import SaladoUser
-from .serializers import RegisterSerializer, UserSerializer, CustomTokenObtainPairSerializer
 from rest_framework.response import Response
 from rest_framework.decorators import api_view, permission_classes
 from rest_framework.permissions import IsAuthenticated
 from rest_framework import status
-
+from django.contrib.auth.models import Group
 import re
+
+from .models import SaladoUser
+from .serializers import RegisterSerializer, UserSerializer, CustomTokenObtainPairSerializer
 
 class RegisterView(CreateAPIView):
     queryset = SaladoUser.objects.all()
@@ -33,8 +34,14 @@ class RegisterView(CreateAPIView):
             return Response({'error': 'National code does not match with phone number.'}, status=status.HTTP_400_BAD_REQUEST)
 
         try:
-            response = super().create(request, *args, **kwargs)
+            role = data.get('role', 'customer')
+            group = Group.objects.get(name=role)
             
+            _ = super().create(request, *args, **kwargs)
+            
+            user = SaladoUser.objects.get(email=data['email'])
+            user.groups.add(group)
+
             # TODO Verification email
 
             return Response({'message': f'ok!'}, status=status.HTTP_201_CREATED)
@@ -70,6 +77,7 @@ class RegisterView(CreateAPIView):
 
     @staticmethod 
     def __validate_phone_number_with_national_code(phone_number, nationalcode): 
+        # TODO add shahkar API
         return True
 
     @staticmethod
