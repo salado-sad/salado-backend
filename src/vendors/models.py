@@ -72,6 +72,7 @@ class Product(models.Model):
         ("pieces", "Pieces"),
     ]
 
+    id = models.AutoField(primary_key=True)
     name = models.CharField(max_length=100, unique=True)
     category = models.CharField(max_length=50, choices=CATEGORY_CHOICES)
     subcategory = models.CharField(max_length=50, choices=SUBCATEGORY_CHOICES)
