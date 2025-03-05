@@ -1,4 +1,5 @@
 from django.db import models
+from auth_system.models import SaladoUser
 
 class Product(models.Model):
     CATEGORY_CHOICES = [
@@ -73,6 +74,7 @@ class Product(models.Model):
     ]
 
     id = models.AutoField(primary_key=True)
+    owner = models.ForeignKey(SaladoUser, on_delete=models.CASCADE, related_name="products")
     name = models.CharField(max_length=100, unique=True)
     category = models.CharField(max_length=50, choices=CATEGORY_CHOICES)
     subcategory = models.CharField(max_length=50, choices=SUBCATEGORY_CHOICES)
