@@ -34,6 +34,7 @@ class RegisterView(CreateAPIView):
         if not self.__validate_phone_number_with_national_code(data['phone_number'], data['national_code']):
             return Response({'error': 'National code does not match with phone number.'}, status=status.HTTP_400_BAD_REQUEST)
 
+        request.data['email'] = request.data['email'].lower()
         try:
             role = data.get('role', 'customer')
             group = Group.objects.get(name=role)
@@ -47,7 +48,6 @@ class RegisterView(CreateAPIView):
 
             return Response({'message': f'ok!'}, status=status.HTTP_201_CREATED)
         except ValidationError as ve:
-            print(type(ve))
             return Response({'error': f'A user with this {list(ve.detail.keys())[0]} information already exists'}, status=status.HTTP_400_BAD_REQUEST)
         except Exception as e:
             return Response({'error': f'User registration failed: {str(e)}'}, status=status.HTTP_400_BAD_REQUEST)
