@@ -74,7 +74,13 @@ class Product(models.Model):
     ]
 
     id = models.AutoField(primary_key=True)
-    owner = models.ForeignKey(SaladoUser, on_delete=models.CASCADE, related_name="products")
+    owner = models.ForeignKey(
+        SaladoUser,
+        on_delete=models.CASCADE,
+        related_name="products",
+        null=True, 
+        blank=True  
+    )
     name = models.CharField(max_length=100, unique=True)
     category = models.CharField(max_length=50, choices=CATEGORY_CHOICES)
     subcategory = models.CharField(max_length=50, choices=SUBCATEGORY_CHOICES)

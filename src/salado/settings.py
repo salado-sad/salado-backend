@@ -45,6 +45,7 @@ INSTALLED_APPS = [
     'auth_system',
     'vendors',
     'management',
+    'cart',
 ]
 
 MIDDLEWARE = [

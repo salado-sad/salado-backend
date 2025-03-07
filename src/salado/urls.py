@@ -21,6 +21,7 @@ from django.urls import path, include
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('auth/', include('auth_system.urls')),
-    path("vendors/", include("vendors.urls")),
-    path("management/", include("management.urls")),
+    path('vendors/', include('vendors.urls')),
+    path('management/', include('management.urls')),
+    path('cart/', include('cart.urls')),  # new cart endpoints
 ]
