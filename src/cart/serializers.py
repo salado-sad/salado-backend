@@ -1,11 +1,9 @@
 from rest_framework import serializers
-from .models import Cart, CartItem
 from management.models import Package
+from .models import Cart, CartItem
 
 class CartItemSerializer(serializers.ModelSerializer):
-    # Show the package name as read-only
     package = serializers.StringRelatedField(read_only=True)
-    # Accept package id for creation
     package_id = serializers.PrimaryKeyRelatedField(queryset=Package.objects.all(), source='package', write_only=True)
     cost = serializers.SerializerMethodField()
 
