@@ -12,7 +12,7 @@ class PackageViewSet(viewsets.ModelViewSet):
 
     def create(self, request, *args, **kwargs):
         """
-        Create a package, ensure enough stock exists (for the entire package stock quantity), and reduce stock.
+        Create a package, ensure enough stock exists, and reduce stock using product names.
         """
         data = request.data
         products = data.get("products", [])
@@ -24,20 +24,20 @@ class PackageViewSet(viewsets.ModelViewSet):
         # Check stock for all products
         insufficient_stock = []
         for item in products:
-            product_id = item.get("product_id")
+            product_name = item.get("product_name")
             item_quantity_per_package = item.get("quantity", 1)
             total_required_quantity = item_quantity_per_package * package_stock_quantity  # Adjust for total package stock
 
             try:
-                product = Product.objects.get(id=product_id)
+                product = Product.objects.get(name=product_name)  # Fetch by name
                 if product.stock_quantity < total_required_quantity:
                     insufficient_stock.append({
-                        "product_id": product_id,
+                        "product_name": product_name,
                         "available_stock": product.stock_quantity,
                         "required_stock": total_required_quantity
                     })
             except Product.DoesNotExist:
-                return Response({"error": f"Product with ID {product_id} does not exist"},
+                return Response({"error": f"Product with name '{product_name}' does not exist"},
                                 status=status.HTTP_400_BAD_REQUEST)
 
         # If stock is not sufficient, return error
@@ -59,7 +59,7 @@ class PackageViewSet(viewsets.ModelViewSet):
 
             # Reduce stock of each product
             for item in products:
-                product = Product.objects.get(id=item["product_id"])
+                product = Product.objects.get(name=item["product_name"])  # Fetch by name
                 product.stock_quantity -= item["quantity"] * package_stock_quantity
                 product.save()
 

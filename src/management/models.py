@@ -7,7 +7,7 @@ class Package(models.Model):
     stock_quantity = models.PositiveIntegerField()
     description = models.TextField(blank=True, null=True)
     image = models.ImageField(upload_to="package_images/", blank=True, null=True)
-    products = models.JSONField(default=list, null=True)
+    products = models.JSONField(default=list, null=True)  # Now stores product names, not IDs
     price = models.DecimalField(max_digits=10, decimal_places=2, default=0)
     is_active = models.BooleanField(default=True)
 
@@ -15,16 +15,16 @@ class Package(models.Model):
         total = Decimal("0.00")
 
         for item in self.products:
-            product_id = item.get("product_id")
+            product_name = item.get("product_name")
             quantity = Decimal(item.get("quantity", 1))
 
             try:
-                product = Product.objects.get(id=product_id)
+                product = Product.objects.get(name=product_name) 
                 total += Decimal(str(product.price)) * quantity
             except Product.DoesNotExist:
                 continue
 
-        return total * Decimal("1.2")  # Apply multiplier if needed
+        return total * Decimal("1.2") 
 
     def save(self, *args, **kwargs):
         self.price = self.calculate_price()
