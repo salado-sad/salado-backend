@@ -15,11 +15,11 @@ class Package(models.Model):
         total = Decimal("0.00")
 
         for item in self.products:
-            product_name = item.get("product_name")
+            name = item.get("name")
             quantity = Decimal(item.get("quantity", 1))
 
             try:
-                product = Product.objects.get(name=product_name) 
+                product = Product.objects.get(name=name) 
                 total += Decimal(str(product.price)) * quantity
             except Product.DoesNotExist:
                 continue
