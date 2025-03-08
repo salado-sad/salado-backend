@@ -1,4 +1,4 @@
-from rest_framework import viewsets, permissions
+from rest_framework import viewsets, permissions, generics
 from rest_framework.decorators import action
 from .models import Product
 from .serializers import ProductSerializer
@@ -18,9 +18,8 @@ class ProductViewSet(viewsets.ModelViewSet):
     def perform_create(self, serializer):
         serializer.save(owner=self.request.user)
 
-    @action(detail=False, methods=['get'], permission_classes=[permissions.IsAuthenticated])
-    def all_products(self, request):
-        """Retrieve all products, regardless of owner."""
-        products = Product.objects.all()
-        serializer = self.get_serializer(products, many=True)
-        return Response(serializer.data)
+class AllProductsView(generics.ListAPIView):
+    """API view to retrieve all products, regardless of the owner."""
+    queryset = Product.objects.all()
+    serializer_class = ProductSerializer
+    permission_classes = [permissions.AllowAny]  # Public access
