@@ -1,6 +1,6 @@
 from rest_framework import serializers
 from management.models import Package
-from .models import Cart, CartItem
+from .models import Cart, CartItem, Purchase
 
 class CartItemSerializer(serializers.ModelSerializer):
     package = serializers.StringRelatedField(read_only=True)
@@ -26,3 +26,11 @@ class CartSerializer(serializers.ModelSerializer):
 
     def get_total_cost(self, obj):
         return obj.get_total_cost()
+    
+class PurchaseSerializer(serializers.ModelSerializer):
+    package = serializers.StringRelatedField(read_only=True)
+    
+    class Meta:
+        model = Purchase
+        fields = ['id', 'user', 'package', 'quantity', 'status', 'purchased_at']
+        read_only_fields = ['id', 'user', 'status', 'purchased_at']

@@ -1,8 +1,9 @@
 # cart/views.py
-from rest_framework import viewsets, permissions, status
+from rest_framework import viewsets, permissions, status, generics
 from rest_framework.response import Response
-from .models import Cart, CartItem
-from .serializers import CartSerializer, CartItemSerializer
+from .models import Cart, CartItem, Purchase
+from rest_framework.decorators import action
+from .serializers import CartSerializer, CartItemSerializer, PurchaseSerializer
 from rest_framework.exceptions import PermissionDenied, ValidationError
 
 class CartItemViewSet(viewsets.ModelViewSet):
@@ -39,6 +40,40 @@ class CartItemViewSet(viewsets.ModelViewSet):
             cart_item.save()
         serializer.instance = cart_item
 
+    @action(detail=True, methods=['post'], permission_classes=[permissions.IsAuthenticated])
+    def purchase(self, request, pk=None):
+        # Get the specific cart item
+        cart_item = self.get_object()
+        user = request.user
+
+        # Ensure only customers can purchase items
+        if not user.groups.filter(name="customer").exists():
+            raise PermissionDenied("Only customers can purchase items.")
+        
+        package = cart_item.package
+        
+        # Check stock again (in case stock has changed)
+        if cart_item.quantity > package.stock_quantity:
+            raise ValidationError("Not enough stock available for this package.")
+        
+        # Reduce package stock
+        package.stock_quantity -= cart_item.quantity
+        package.save()
+        
+        # Create a purchase record with the status "Awaiting admin approval"
+        purchase = Purchase.objects.create(
+            user=user,
+            package=package,
+            quantity=cart_item.quantity,
+            status="Awaiting admin approval"
+        )
+        
+        # Remove the cart item (simulate a purchase completion)
+        cart_item.delete()
+        
+        serializer = PurchaseSerializer(purchase)
+        return Response(serializer.data, status=status.HTTP_201_CREATED)
+
 class CartViewSet(viewsets.ViewSet):
     permission_classes = [permissions.IsAuthenticated]
 
@@ -47,3 +82,11 @@ class CartViewSet(viewsets.ViewSet):
         cart, _ = Cart.objects.get_or_create(user=user)
         serializer = CartSerializer(cart)
         return Response(serializer.data)
+
+
+class PurchaseListView(generics.ListAPIView):
+    serializer_class = PurchaseSerializer
+    permission_classes = [permissions.IsAuthenticated]
+
+    def get_queryset(self):
+        return Purchase.objects.filter(user=self.request.user)

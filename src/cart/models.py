@@ -27,3 +27,14 @@ class CartItem(models.Model):
 
     def __str__(self):
         return f"{self.package.name} (x{self.quantity}) in {self.cart.user.username}'s cart"
+    
+
+class Purchase(models.Model):
+    user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name="purchases")
+    package = models.ForeignKey("management.Package", on_delete=models.CASCADE)  # adjust the import if needed
+    quantity = models.PositiveIntegerField(default=1)
+    status = models.CharField(max_length=50, default="Awaiting admin approval")
+    purchased_at = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return f"Purchase of {self.package.name} (x{self.quantity}) by {self.user.username}"
