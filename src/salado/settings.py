@@ -146,13 +146,20 @@ DEFAULT_FROM_EMAIL = 'auth@saldo.ir'
 CORS_ALLOW_ALL_ORIGINS = True  # TODO: Remove this
 
 CORS_ALLOWED_ORIGINS = [
-    'api.salado.mghgm.ir',
-    'localhost',
-    '127.0.0.1',
-    '213.233.184.213:8000',
-    'api.salado.mghgm.ir:8000',
+    'http://api.salado.mghgm.ir',
+    'http://localhost',
+    'http://127.0.0.1',
+    'http://213.233.184.213:8000',
+    'http://api.salado.mghgm.ir:8000',
     'http://api.salado.mghgm.ir',
     "http://localhost:3000",  # React development server
+    'https://api.salado.mghgm.ir',
+    'https://localhost',
+    'https://127.0.0.1',
+    'https://213.233.184.213:8000',
+    'https://api.salado.mghgm.ir:8000',
+    'https://api.salado.mghgm.ir',
+    "https://localhost:3000",  # React development server
     "https://your-production-site.com",  # Production site
 ]
 
