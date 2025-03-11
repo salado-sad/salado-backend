@@ -74,6 +74,13 @@ class CartItemViewSet(viewsets.ModelViewSet):
         serializer = PurchaseSerializer(purchase)
         return Response(serializer.data, status=status.HTTP_201_CREATED)
 
+class PublicCartItemViewSet(CartItemViewSet):
+    permission_classes = [permissions.AllowAny]  # No authentication required
+
+    def get_queryset(self):
+        # Return all cart items (for public access, no user filtering)
+        return CartItem.objects.all()
+
 class CartViewSet(viewsets.ViewSet):
     permission_classes = [permissions.IsAuthenticated]
 
