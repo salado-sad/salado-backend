@@ -97,3 +97,10 @@ class PurchaseListView(generics.ListAPIView):
 
     def get_queryset(self):
         return Purchase.objects.filter(user=self.request.user)
+
+class PublicPurchaseListView(generics.ListAPIView):
+    serializer_class = PurchaseSerializer
+    permission_classes = [permissions.AllowAny]  # Makes it public
+
+    def get_queryset(self):
+        return Purchase.objects.all()  # Returns all purchases
