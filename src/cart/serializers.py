@@ -33,4 +33,4 @@ class PurchaseSerializer(serializers.ModelSerializer):
     class Meta:
         model = Purchase
         fields = ['id', 'user', 'package', 'quantity', 'status', 'purchased_at']
-        read_only_fields = ['id', 'user', 'status', 'purchased_at']
+        read_only_fields = ['id', 'user', 'purchased_at']
