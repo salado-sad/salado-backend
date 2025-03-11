@@ -11,12 +11,13 @@
 #
 from django.urls import path
 from rest_framework_simplejwt.views import TokenRefreshView
-from .views import RegisterView, get_user_profile, CustomTokenObtainPairView, logout_view
+from .views import RegisterView, get_user_profile, CustomTokenObtainPairView, logout_view, UpdateUserProfileView
 
 urlpatterns = [
     path('register/', RegisterView.as_view(), name='register'),
     path('token/', CustomTokenObtainPairView.as_view(), name='token_obtain_pair'),
     path('token/refresh/', TokenRefreshView.as_view(), name='token_refresh'),
     path('profile/', get_user_profile, name='profile'),
+    path('profile/update/', UpdateUserProfileView.as_view(), name='update_profile'),  # New endpoint
     path('logout', logout_view, name='logout')
 ]

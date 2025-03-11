@@ -8,6 +8,8 @@ class SaladoUser(AbstractUser):
     last_name = models.CharField(max_length=30, blank=True, null=False, verbose_name="Last Name")
     date_of_birth = models.DateField(blank=True, null=True, verbose_name="Date of Birth")
     national_code = models.CharField(max_length=10, blank=True, null=False, unique=True, verbose_name="National Code")
+    address = models.TextField(blank=True, null=True, verbose_name="Address")  # New field
+    company = models.CharField(max_length=100, blank=True, null=True, verbose_name="Company")  # New field
 
     REQUIRED_FIELDS = ['email', 'phone_number', 'first_name', 'last_name', 'date_of_birth', 'national_code']
 
